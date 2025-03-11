@@ -1,139 +1,322 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Audio Player</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #f4f4f4;
-            font-family: Arial, sans-serif;
-        }
-
-        .player-container {
-            position: relative;
-            width: 180px;
-            height: 180px;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            border-radius: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .play-button {
-            width: 60px;
-            height: 60px;
-            background: #fff;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .play-button::after {
-            content: '';
-            width: 0;
-            height: 0;
-            border-left: 18px solid #6a11cb;
-            border-top: 12px solid transparent;
-            border-bottom: 12px solid transparent;
-        }
-
-        .pause-button::after {
-            content: '';
-            display: block;
-            width: 6px;
-            height: 20px;
-            background: #6a11cb;
-            position: absolute;
-            border-radius: 2px;
-            left: 20px;
-        }
-
-        .pause-button::before {
-            content: '';
-            display: block;
-            width: 6px;
-            height: 20px;
-            background: #6a11cb;
-            position: absolute;
-            border-radius: 2px;
-            left: 34px;
-        }
-
-        .time-display {
-            position: absolute;
-            color: #fff;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .time-current {
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-        }
-
-        .time-total {
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مشغل القرآن الكريم</title>
+  <!-- تضمين أيقونات Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* تهيئة الصفحة لتملأ الشاشة */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+      background: #f0f0f0;
+      direction: rtl;
+      text-align: center;
+    }
+    #player {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #D1E8E2, #F1F8F7);
+    }
+    #info {
+      margin-bottom: 20px;
+    }
+    select {
+      padding: 8px;
+      margin: 0 5px;
+      font-size: 16px;
+    }
+    #controls {
+      margin: 20px;
+    }
+    #controls button {
+      background: #fff;
+      border: none;
+      padding: 15px;
+      margin: 0 10px;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.3s;
+    }
+    #controls button:hover {
+      background: #e0e0e0;
+    }
+    #timeDisplay {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-    <div class="player-container">
-        <div class="time-display time-current" id="current-time">00:00</div>
-        <div class="play-button" id="play-button" onclick="togglePlay()"></div>
-        <div class="time-display time-total" id="total-time">--:--</div>
+  <div id="player">
+    <div id="info">
+      <!-- اختيار القارئ -->
+      <select id="reciter">
+        <option value="abu_bakr_shatri">أبو بكر الشاطرى</option>
+        <option value="yasser_ad-dussary">ياسر الدوسري</option>
+        <option value="abdul_baset">عبد الباسط عبد الصمد</option>
+        <option value="khalil_al_husary">محمد خليل الحصري</option>
+        <option value="siddiq_minshawi">محمد صديق المنشاوي</option>
+        <option value="maher_almu3aiqly">ماهر المعيقلي</option>
+        <option value="abdurrahmaan_as_sudais">عبد الرحمن السديس</option>
+        <option value="saud_ash_shuraym">سعود الشريم</option>
+      </select>
+      <!-- اختيار السورة مع جميع سور القرآن -->
+      <select id="surah">
+        <option value="1">سورة الفاتحة</option>
+        <option value="2">سورة البقرة</option>
+        <option value="3">سورة آل عمران</option>
+        <option value="4">سورة النساء</option>
+        <option value="5">سورة المائدة</option>
+        <option value="6">سورة الأنعام</option>
+        <option value="7">سورة الأعراف</option>
+        <option value="8">سورة الأنفال</option>
+        <option value="9">سورة التوبة</option>
+        <option value="10">سورة يونس</option>
+        <option value="11">سورة هود</option>
+        <option value="12">سورة يوسف</option>
+        <option value="13">سورة الرعد</option>
+        <option value="14">سورة إبراهيم</option>
+        <option value="15">سورة الحجر</option>
+        <option value="16">سورة النحل</option>
+        <option value="17">سورة الإسراء</option>
+        <option value="18">سورة الكهف</option>
+        <option value="19">سورة مريم</option>
+        <option value="20">سورة طه</option>
+        <option value="21">سورة الأنبياء</option>
+        <option value="22">سورة الحج</option>
+        <option value="23">سورة المؤمنون</option>
+        <option value="24">سورة النور</option>
+        <option value="25">سورة الفرقان</option>
+        <option value="26">سورة الشعراء</option>
+        <option value="27">سورة النمل</option>
+        <option value="28">سورة القصص</option>
+        <option value="29">سورة العنكبوت</option>
+        <option value="30">سورة الروم</option>
+        <option value="31">سورة لقمان</option>
+        <option value="32">سورة السجدة</option>
+        <option value="33">سورة الأحزاب</option>
+        <option value="34">سورة سبإ</option>
+        <option value="35">سورة فاطر</option>
+        <option value="36">سورة يس</option>
+        <option value="37">سورة الصافات</option>
+        <option value="38">سورة ص</option>
+        <option value="39">سورة الزمر</option>
+        <option value="40">سورة غافر</option>
+        <option value="41">سورة فصلت</option>
+        <option value="42">سورة الشورى</option>
+        <option value="43">سورة الزخرف</option>
+        <option value="44">سورة الدخان</option>
+        <option value="45">سورة الجاثية</option>
+        <option value="46">سورة الأحقاف</option>
+        <option value="47">سورة محمد</option>
+        <option value="48">سورة الفتح</option>
+        <option value="49">سورة الحجرات</option>
+        <option value="50">سورة ق</option>
+        <option value="51">سورة الذاريات</option>
+        <option value="52">سورة الطور</option>
+        <option value="53">سورة النجم</option>
+        <option value="54">سورة القمر</option>
+        <option value="55">سورة الرحمن</option>
+        <option value="56">سورة الواقعة</option>
+        <option value="57">سورة الحديد</option>
+        <option value="58">سورة المجادلة</option>
+        <option value="59">سورة الحشر</option>
+        <option value="60">سورة الممتحنة</option>
+        <option value="61">سورة الصف</option>
+        <option value="62">سورة الجمعة</option>
+        <option value="63">سورة المنافقون</option>
+        <option value="64">سورة التغابن</option>
+        <option value="65">سورة الطلاق</option>
+        <option value="66">سورة التحريم</option>
+        <option value="67">سورة الملك</option>
+        <option value="68">سورة القلم</option>
+        <option value="69">سورة الحاقة</option>
+        <option value="70">سورة المعارج</option>
+        <option value="71">سورة نوح</option>
+        <option value="72">سورة الجن</option>
+        <option value="73">سورة المزمل</option>
+        <option value="74">سورة المدثر</option>
+        <option value="75">سورة القيامة</option>
+        <option value="76">سورة الإنسان</option>
+        <option value="77">سورة المرسلات</option>
+        <option value="78">سورة النبأ</option>
+        <option value="79">سورة النازعات</option>
+        <option value="80">سورة عبس</option>
+        <option value="81">سورة التكوير</option>
+        <option value="82">سورة الإنفطار</option>
+        <option value="83">سورة المطففين</option>
+        <option value="84">سورة الإنشقاق</option>
+        <option value="85">سورة البروج</option>
+        <option value="86">سورة الطارق</option>
+        <option value="87">سورة الأعلى</option>
+        <option value="88">سورة الغاشية</option>
+        <option value="89">سورة الفجر</option>
+        <option value="90">سورة البلد</option>
+        <option value="91">سورة الشمس</option>
+        <option value="92">سورة الليل</option>
+        <option value="93">سورة الضحى</option>
+        <option value="94">سورة الشرح</option>
+        <option value="95">سورة التين</option>
+        <option value="96">سورة العلق</option>
+        <option value="97">سورة القدر</option>
+        <option value="98">سورة البينة</option>
+        <option value="99">سورة الزلزلة</option>
+        <option value="100">سورة العاديات</option>
+        <option value="101">سورة القارعة</option>
+        <option value="102">سورة التكاثر</option>
+        <option value="103">سورة العصر</option>
+        <option value="104">سورة الهمزة</option>
+        <option value="105">سورة الفيل</option>
+        <option value="106">سورة قريش</option>
+        <option value="107">سورة الماعون</option>
+        <option value="108">سورة الكوثر</option>
+        <option value="109">سورة الكافرون</option>
+        <option value="110">سورة النصر</option>
+        <option value="111">سورة المسد</option>
+        <option value="112">سورة الإخلاص</option>
+        <option value="113">سورة الفلق</option>
+        <option value="114">سورة الناس</option>
+      </select>
+      <div id="trackNumber" style="margin-top:10px; font-weight:bold;"></div>
     </div>
-    <audio id="audio" src="https://server12.mp3quran.net/maher/002.mp3" preload="auto"></audio>
-
-    <script>
-        const audio = document.getElementById('audio');
-        const playButton = document.getElementById('play-button');
-        const currentTimeDisplay = document.getElementById('current-time');
-        const totalTimeDisplay = document.getElementById('total-time');
-        let isPlaying = false;
-
-        // تحديث وقت التشغيل الحالي
-        audio.addEventListener('timeupdate', () => {
-            const currentTime = formatTime(audio.currentTime);
-            currentTimeDisplay.textContent = currentTime;
-        });
-
-        // تحديث المدة الإجمالية عند تحميل الصوت
-        audio.addEventListener('loadedmetadata', () => {
-            const totalTime = formatTime(audio.duration);
-            totalTimeDisplay.textContent = totalTime;
-        });
-
-        function togglePlay() {
-            if (isPlaying) {
-                audio.pause();
-                playButton.classList.remove('pause-button');
-            } else {
-                audio.play();
-                playButton.classList.add('pause-button');
-            }
-            isPlaying = !isPlaying;
-        }
-
-        // تنسيق الوقت (ثواني إلى دقائق:ثواني)
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-    </script>
+    <!-- عنصر الصوت -->
+    <audio id="audio" preload="metadata"></audio>
+    <!-- عناصر التحكم -->
+    <div id="controls">
+      <button id="prev" title="السورة السابقة"><i class="fa fa-backward"></i></button>
+      <button id="rewind" title="تقديم 10 ثواني"><i class="fa fa-rotate-left"></i></button>
+      <button id="playPause" title="تشغيل/إيقاف"><i class="fa fa-play"></i></button>
+      <button id="forward" title="تأخير 10 ثواني"><i class="fa fa-rotate-right"></i></button>
+      <button id="next" title="السورة التالية"><i class="fa fa-forward"></i></button>
+    </div>
+    <!-- عرض الوقت الحالي ومدة الصوت -->
+    <div id="timeDisplay">00:00 / 00:00</div>
+  </div>
+  <script>
+    const audio = document.getElementById('audio');
+    const playPauseBtn = document.getElementById('playPause');
+    const forwardBtn = document.getElementById('forward');
+    const rewindBtn = document.getElementById('rewind');
+    const nextBtn = document.getElementById('next');
+    const prevBtn = document.getElementById('prev');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const reciterSelect = document.getElementById('reciter');
+    const surahSelect = document.getElementById('surah');
+    const trackNumberDisplay = document.getElementById('trackNumber');
+    
+    // دالة لتنسيق الوقت (إذا تجاوزت المدة 60 دقيقة تُعرض كـ ساعة:دقيقة:ثانية)
+    function formatTime(seconds) {
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = Math.floor(seconds % 60);
+      if (hrs > 0) {
+        return hrs + " ساعة " + (mins < 10 ? "0" + mins : mins) + " دقيقة " + (secs < 10 ? "0" + secs : secs) + " ثانية";
+      } else {
+        return (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs);
+      }
+    }
+    
+    // دالة لتكوين رابط الصوت بناءً على القارئ ورقم السورة
+    function getAudioURL(reciter, surah) {
+      let url = "";
+      switch(reciter) {
+        case "maher_almu3aiqly":
+          const surahStr = surah.toString().padStart(3, '0');
+          url = "https://download.quranicaudio.com/quran/maher_almu3aiqly/year1440//" + surahStr + ".mp3";
+          break;
+        case "saud_ash_shuraym":
+          const surahStr2 = surah.toString().padStart(3, '0');
+          url = "https://download.quranicaudio.com/qdc/saud_ash-shuraym/murattal/" + surahStr2 + ".mp3";
+          break;
+        default:
+          let baseUrl = "";
+          if(reciter === "abu_bakr_shatri") {
+            baseUrl = "https://download.quranicaudio.com/qdc/abu_bakr_shatri/murattal/";
+          } else if(reciter === "yasser_ad-dussary") {
+            baseUrl = "https://download.quranicaudio.com/qdc/yasser_ad-dussary/mp3/";
+          } else if(reciter === "abdul_baset") {
+            baseUrl = "https://download.quranicaudio.com/qdc/abdul_baset/mujawwad/";
+          } else if(reciter === "khalil_al_husary") {
+            baseUrl = "https://download.quranicaudio.com/qdc/khalil_al_husary/muallim/";
+          } else if(reciter === "siddiq_minshawi") {
+            baseUrl = "https://download.quranicaudio.com/qdc/siddiq_minshawi/kids_repeat/";
+          } else if(reciter === "abdurrahmaan_as_sudais") {
+            baseUrl = "https://download.quranicaudio.com/qdc/abdurrahmaan_as_sudais/murattal/";
+          }
+          url = baseUrl + surah + ".mp3";
+      }
+      return url;
+    }
+    
+    // تحميل ملف الصوت وفقاً للاختيارات الحالية
+    function loadAudio() {
+      const reciter = reciterSelect.value;
+      const surah = surahSelect.value;
+      const url = getAudioURL(reciter, surah);
+      audio.src = url;
+      audio.load();
+      const displayNumber = (reciter === "maher_almu3aiqly" || reciter === "saud_ash_shuraym") ? surah.toString().padStart(3, '0') : surah;
+      trackNumberDisplay.innerText = "السورة: " + displayNumber;
+    }
+    
+    playPauseBtn.addEventListener('click', () => {
+      if(audio.paused) {
+        audio.play();
+        playPauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
+      } else {
+        audio.pause();
+        playPauseBtn.innerHTML = '<i class="fa fa-play"></i>';
+      }
+    });
+    
+    forwardBtn.addEventListener('click', () => {
+      audio.currentTime += 10;
+    });
+    
+    rewindBtn.addEventListener('click', () => {
+      audio.currentTime = Math.max(0, audio.currentTime - 10);
+    });
+    
+    nextBtn.addEventListener('click', () => {
+      let currentSurah = parseInt(surahSelect.value);
+      if(currentSurah < 114) {
+        surahSelect.value = currentSurah + 1;
+        loadAudio();
+        audio.play();
+        playPauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
+      }
+    });
+    
+    prevBtn.addEventListener('click', () => {
+      let currentSurah = parseInt(surahSelect.value);
+      if(currentSurah > 1) {
+        surahSelect.value = currentSurah - 1;
+        loadAudio();
+        audio.play();
+        playPauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
+      }
+    });
+    
+    audio.addEventListener('timeupdate', () => {
+      timeDisplay.innerText = formatTime(audio.currentTime) + " / " + (audio.duration ? formatTime(audio.duration) : "00:00");
+    });
+    
+    reciterSelect.addEventListener('change', loadAudio);
+    surahSelect.addEventListener('change', loadAudio);
+    
+    // تحميل الصوت الابتدائي
+    loadAudio();
+  </script>
 </body>
-  </html>
+                                          </html>
